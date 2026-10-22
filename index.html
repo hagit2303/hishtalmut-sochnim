@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edu-AIOS | מורה-על: השתלמות סוכנים ואוטומציות למורים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Heebo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Assistant', 'Heebo', -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top Navigation */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-subtle);
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 48px;
+      text-align: center;
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg-page) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--emerald-light);
+      color: var(--emerald);
+      border: 1px solid #a7f3d0;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 46px;
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 28px;
+    }
+
+    .hero-info {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* Views */
+    .view-content {
+      display: none;
+      padding: 48px 0 80px;
+    }
+
+    .view-content.active {
+      display: block;
+    }
+
+    /* Slide Deck Presentation */
+    .slide-deck {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+    }
+
+    .slide {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-header {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .slide-title {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      line-height: 1.25;
+    }
+
+    .slide-body {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .slide-body ul {
+      margin-top: 16px;
+      padding-right: 28px;
+    }
+
+    .slide-body li {
+      margin-bottom: 12px;
+    }
+
+    .slide-body strong {
+      color: var(--text-main);
+    }
+
+    .deck-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .slide-counter {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-light);
+    }
+
+    /* Grid & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    /* Timeline list */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .unit-card {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .unit-num {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--primary);
+      text-align: center;
+      background: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 10px 0;
+    }
+
+    .unit-content h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .unit-content p {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* Action Banner */
+    .banner {
+      background: #ffffff;
+      border: 2px solid var(--primary-light);
+      border-radius: 18px;
+      padding: 36px;
+      text-align: center;
+      margin-top: 48px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .banner h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .banner p {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.15s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-inner">
+      <div class="brand-title">
+        <span>⚡ Edu-AIOS</span>
+        <span class="brand-badge">הכפר הירוק</span>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('deck')">📽️ מצגת להנהלה</button>
+        <button class="tab-btn" onclick="showTab('curriculum')">📚 סילבוס ששת המפגשים</button>
+        <button class="tab-btn" onclick="showTab('tracks')">🔬 שני המסלולים</button>
+        <button class="tab-btn" onclick="showTab('painpoints')">🎯 מחקר כאבי מורים</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-tag">הכשרה מנהיגותית לשנת הלימודים תשפ"ז</div>
+      <h1>מורה-על: <span>סוכנים ואוטומציות בהוראה</span></h1>
+      <p>מעבר משיחה פסיבית עם צ'אטבוטים למערכת הפעלה אישית (Edu-OS) הפועלת על המחשב, חוסכת מאות שעות שחיקה ומצעידה את בית הספר קדימה.</p>
+      <div class="hero-info">
+        <span>👩‍🏫 <strong>מובילת התוכנית:</strong> חגית ברגמן</span>
+        <span>🏫 <strong>מוגש אל:</strong> הנהלת הכפר הירוק והפיקוח על המדעים</span>
+        <span>⏱️ <strong>היקף:</strong> 30 שעות (מוכר לגמול)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- TAB 1: PRESENTATION SLIDE DECK (LIGHT THEME) -->
+    <div id="tab-deck" class="view-content active">
+      <div class="slide-deck">
+        
+        <!-- Slide 1 -->
+        <div class="slide active">
+          <div class="slide-header">שקופית 1 // הפתיחה והחזון</div>
+          <h2 class="slide-title">המהפכה השקטה: מצרכני בינה לבילדרים פדגוגיים</h2>
+          <div class="slide-body">
+            <p>בשנתיים האחרונות למדנו לנהל שיחות עם צ'אטבוטים. זה עזר קצת, אך לא פתר את השחיקה העמוקה. כעת מגיע השלב הבא:</p>
+            <ul>
+              <li><strong>מפסיקים להתחיל מאפס:</strong> לא עוד שיחות גנריות שנשכחות בסוף כל סשן.</li>
+              <li><strong>משרד פדגוגי אישי על המחשב:</strong> תשתית מקומית ב-Antigravity או Claude Code המכירה את הכיתות, הסילבוס והסטנדרטים המקצועיים שלך.</li>
+              <li><strong>הכפר הירוק כחלוץ ארצי:</strong> המוסד הראשון שמכשיר מורים לבנות בעצמם סוכנים ואוטומציות לחדר המורים.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="slide-header">שקופית 2 // הכאב המרכזי</div>
+          <h2 class="slide-title">תסמונת "מוח הפירה" של המורה כיום</h2>
+          <div class="slide-body">
+            <p>כמה פעמים פתחתם השבוע 15 כרטיסיות שונות כדי להכין שיעור אחד?</p>
+            <ul>
+              <li><strong>פיזור ופיצול:</strong> משו"ב, וואטסאפ הורים, דרייב, מייל בית-ספרי, קנבה, וורד. המורה הוא "הדבק" שמזיע ביניהם.</li>
+              <li><strong>זוללי זמן סיזיפיים:</strong> עשרות שעות ערב שרופות על כתיבת מבחנים, פירוק מחוונים, ניסוח משובים ומענה למיילים זהים.</li>
+              <li><strong>שחיקת איכות:</strong> חוסר זמן לייצר התאמות אישיות (בידול) לתלמידים מתקשים ולמצטיינים.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+          <div class="slide-header">שקופית 3 // סולם הפתרונות</div>
+          <h2 class="slide-title">סולם הפתרונות הפדגוגי: מרמה 1 לרמה 4</h2>
+          <div class="slide-body">
+            <ul>
+              <li><strong>רמה 1 – כלי מדף:</strong> כניסה לצ'אט ברשת (כל פעם מתחילים מאפס, ללא זיכרון).</li>
+              <li><strong>רמה 2 – תהליך אוטומטי (Workflow):</strong> שרשור פקודות (למשל: סילבוס ← שאלות ← מחוון).</li>
+              <li><strong>רמה 3 – מערכת מותאמת:</strong> בוט שיש לו את הקבצים של בית הספר.</li>
+              <li><strong>רמה 4 – Edu-AIOS:</strong> מערכת הפעלה מקומית על המחשב עם תעודת זהות פדגוגית, סקילים מומחים וסוכנים עצמאיים.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+          <div class="slide-header">שקופית 4 // החזר השקעה מוסדי</div>
+          <h2 class="slide-title">מה מרוויח בית הספר? (החזר השקעה מדיד)</h2>
+          <div class="slide-body">
+            <ul>
+              <li>⏱️ <strong>חיסכון של 4-6 שעות שבועיות לכל מורה:</strong> מבחנים ומחוונים ב-80% פחות זמן; משוב אישי ל-35 תלמידים תוך 60 שניות.</li>
+              <li>🛡️ <strong>שמירה על גבולות ורוגע:</strong> סוכן סינון ומענה אמפתי למיילים של הורים חוסך התכתבויות שוחקות בלילה.</li>
+              <li>🎯 <strong>מצוינות פדגוגית ללא פשרות:</strong> הפקת 3 רמות לכל משימה (מונגש, בסיס, אתגר) בלחיצת כפתור אחת.</li>
+              <li>🏆 <strong>מיצוב יוקרתי לכפר הירוק:</strong> הצוות החינוכי המתקדם ביותר בישראל.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+          <div class="slide-header">שקופית 5 // מודל ההטמעה</div>
+          <h2 class="slide-title">תוכנית הפעולה וההטמעה בכפר הירוק</h2>
+          <div class="slide-body">
+            <ul>
+              <li><strong>שלב 1 – פיילוט צוות מוביל (10-15 מורים):</strong> הכשרת רכזי מקצוע ומורים מובילים כשגרירי שינוי.</li>
+              <li><strong>שלב 2 – השקת שני המסלולים:</strong> מסלול בית-ספרי רחב לצד מסלול התמחות מדעי למורי ביולוגיה.</li>
+              <li><strong>שלב 3 – השקת "בנק הסקילים של הכפר הירוק":</strong> אירוע Show & Tell שבו כל מורה תורם את הסקיל שלו למאגר המוסדי המשותף.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="deck-nav">
+          <button class="nav-btn" onclick="prevSlide()">❮ שקופית קודמת</button>
+          <span class="slide-counter" id="counter">1 / 5</span>
+          <button class="nav-btn" onclick="nextSlide()">שקופית הבאה ❯</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: CURRICULUM -->
+    <div id="tab-curriculum" class="view-content">
+      <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">סילבוס ששת המפגשים (30 שעות אקדמיות)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">מבנה קבוע: מצגת פתיחה ← הדגמת מודלינג חיה ← תרגול מעשי Hands-on ← תוצר סופי במחשב.</p>
+
+      <div class="timeline">
+        <div class="unit-card">
+          <div class="unit-num">01</div>
+          <div class="unit-content">
+            <h3>הרנטגן הפדגוגי והקמת המשרד הדיגיטלי</h3>
+            <p>המעבר מפיזור לריכוז: מיפוי שעות שרופות, הבנת סולם הפתרונות והתקנת ה-Edu-AIOS הראשון במחשב האישי.</p>
+          </div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-num">02</div>
+          <div class="unit-content">
+            <h3>תעודת הזהות הפדגוגית של המורה (Context Engineering)</h3>
+            <p>איך מלמדים את הסוכן מי אני, מה הכיתות שלי, ומה הסטנדרטים הפדגוגיים שלי מבלי לחזור על עצמנו לעולם.</p>
+          </div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-num">03</div>
+          <div class="unit-content">
+            <h3>סקילים (Skills) – לבנות מומחים פדגוגיים אישיים</h3>
+            <p>יצירת מומחים אישיים למבחנים, מחוונים קפדניים ובידול לשלוש רמות למידה (מונגש, בסיס, אתגר עמוק).</p>
+          </div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-num">04</div>
+          <div class="unit-content">
+            <h3>סוכנים אוטונומיים (Agents) וחיבור לקבצים במחשב</h3>
+            <p>משיחה לפעולה: סוכן הסורק קבצים קיימים, מאחד סילבוסים ומייצר יחידות הוראה עצמאיות בפיקוח המורה.</p>
+          </div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-num">05</div>
+          <div class="unit-content">
+            <h3>אוטומציה של מיילים, תקשורת ומשובים אישיים</h3>
+            <p>סוכן סינון ומענה אמפתי לפניות הורים ותלמידים, ומחולל משובים כיתתי שמייצר 35 מכתבי משוב אישיים תוך דקה.</p>
+          </div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-num">06</div>
+          <div class="unit-content">
+            <h3>אירוע סיום: תצוגת מורים (Show & Tell) ובנק הסקילים</h3>
+            <p>במת מורים חגיגית להצגת המערכות האישיות, שיתוף פעולה בין-תחומי והקמת בנק הסקילים המשותף של הכפר הירוק.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: TRACKS -->
+    <div id="tab-tracks" class="view-content">
+      <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">שני מסלולי הכשרה ייעודיים</h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">מענה כפול: מענה מערכתי לכלל הצוות החינוכי לצד התמחות מדעית מעמיקה למורי ביולוגיה.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon">🏫</div>
+          <h3 class="card-title">מסלול מורי הכפר הירוק (כלל בית-ספרי)</h3>
+          <p class="card-desc">מיועד לכלל מורי חט"ב וחט"ע בכל תחומי הדעת. דגש על צמצום עומס מנהלתי, סדר דיגיטלי, מענה חכם למיילים, הפקת מצגות שיעור ומשובי תלמידים.</p>
+          <div class="tag-group">
+            <span class="tag">משרד המורה</span>
+            <span class="tag">מענה למיילים</span>
+            <span class="tag">משוב כיתתי</span>
+            <span class="tag">מצגות מעוצבות</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🧬</div>
+          <h3 class="card-title">מסלול מורי ביולוגיה ומדעים</h3>
+          <p class="card-desc">התמחות תחומית עמוקה למורי 5 יח"ל וחט"ב. דגש בלתי מתפשר על דיוק מדעי, מניעת טלאולוגיה והאנשה, ניתוח גרפים ואנסין, מעבדות חקר וסוכן סוקרטי.</p>
+          <div class="tag-group">
+            <span class="tag">ללא טלאולוגיה</span>
+            <span class="tag">מבחני בגרות ואנסין</span>
+            <span class="tag">מעבדות חקר</span>
+            <span class="tag">תרגול סוקרטי</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PAIN POINTS -->
+    <div id="tab-painpoints" class="view-content">
+      <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">מחקר עומק: מה כואב למורים?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">איך מערכת ההפעלה Edu-AIOS פותרת את ששת מוקדי השחיקה המרכזיים בהוראה:</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3 class="card-title">1. "מוח פירה" ופיזור כלים</h3>
+          <p class="card-desc"><strong>הכאב:</strong> זגזוג בין 15 אתרים שונים שמתחילים כל פעם מאפס.<br/><strong>הפתרון:</strong> מרכז בקרה אחד על המחשב שמחזיק את כל הזיכרון הפדגוגי.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📧</div>
+          <h3 class="card-title">2. עומס מיילים והודעות שוחק</h3>
+          <p class="card-desc"><strong>הכאב:</strong> שעות ערב אבודות במענה להודעות הורים חוזרות.<br/><strong>הפתרון:</strong> סוכן סינון ומענה אמפתי שמכין טיוטות תשובה מקצועיות תוך 15 שניות.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <h3 class="card-title">3. חיבור מבחנים ומחוונים</h3>
+          <p class="card-desc"><strong>הכאב:</strong> 3-5 שעות עבודה על כל מבחן יחיד כדי שיהיה הוגן ומאוזן.<br/><strong>הפתרון:</strong> סקיל מבחנים שמייצר מבחן ומחוון נקודות מפורט ב-60 שניות.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧩</div>
+          <h3 class="card-title">4. בידול בכיתה הטרוגנית</h3>
+          <p class="card-desc"><strong>הכאב:</strong> קושי אמיתי להכין 3 גרסאות לכל משימה.<br/><strong>הפתרון:</strong> סקיל בידול שהופך כל דף עבודה למונגש, בסיסי ומאתגר ברגע.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <h3 class="card-title">5. משובים אישיים לתלמידים</h3>
+          <p class="card-desc"><strong>הכאב:</strong> בדיקת 100 מבחנים והחזרת ציון קר בלבד בלי הסבר מעצים.<br/><strong>הפתרון:</strong> מחולל משוב שמפיק מכתב אישי מנומק לכל תלמיד מתוך טבלת ציונים.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <h3 class="card-title">6. עיצוב מצגות וחומרים</h3>
+          <p class="card-desc"><strong>הכאב:</strong> שעות מבוזבזות על עיצוב שקופיות עמוסות מלל.<br/><strong>הפתרון:</strong> תסריטי שקופיות מינימליסטיים, נקיים וממוקדי סקרנות וחשיבה.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner -->
+    <div class="banner">
+      <h2>הכפר הירוק מוביל את העתיד הפדגוגי בישראל</h2>
+      <p>כל החומרים, הסילבוסים וערכת התוכנה מוכנים להורדה ולהצגה בפני ההנהלה.</p>
+      <button class="btn-primary" onclick="showTab('deck')">צפייה במצגת ההנהלה ❯</button>
+    </div>
+
+  </main>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      
+      const btns = document.querySelectorAll('.tab-btn');
+      if (tabId === 'deck') btns[0].classList.add('active');
+      if (tabId === 'curriculum') btns[1].classList.add('active');
+      if (tabId === 'tracks') btns[2].classList.add('active');
+      if (tabId === 'painpoints') btns[3].classList.add('active');
+    }
+
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+
+    function updateSlides() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === slideIndex));
+      counter.textContent = (slideIndex + 1) + ' / ' + slides.length;
+    }
+
+    function nextSlide() {
+      if (slideIndex < slides.length - 1) {
+        slideIndex++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (slideIndex > 0) {
+        slideIndex--;
+        updateSlides();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('tab-deck').classList.contains('active')) {
+        if (e.key === 'ArrowLeft') nextSlide();
+        if (e.key === 'ArrowRight') prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
